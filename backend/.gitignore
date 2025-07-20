@@ -1,0 +1,40 @@
+# Ignore Python bytecode and cache
+__pycache__/
+*.py[cod]
+
+# Ignore local .env files (environment variables/secrets)
+.env
+
+# Ignore virtual environment directories inside backend/
+Lib/
+Scripts/
+Include/
+share/
+pyvenv.cfg
+
+# Ignore Python virtual environment standard folders (just in case)
+venv/
+.venv/
+
+# Ignore package files
+*.egg-info/
+dist/
+build/
+
+# Ignore test/cache/coverage files
+.pytest_cache/
+.cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# Ignore IDE/editor configs
+.vscode/
+.idea/
+
+# Ignore logs
+*.log
+
+# FastAPI/OpenAPI
+openapi.json
+docs/

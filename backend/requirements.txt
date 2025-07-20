@@ -1,0 +1,11 @@
+# backend/requirements.txt
+fastapi
+uvicorn
+python-dotenv
+openai
+tiktoken
+PyMuPDF
+pypdf
+chromadb
+httpx
+google-generativeai
