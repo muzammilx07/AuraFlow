@@ -9,3 +9,4 @@ pypdf
 chromadb
 httpx
 google-generativeai
+python-multipart
