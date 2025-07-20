@@ -1,4 +1,4 @@
-import { useCallback, useState, useRef, useEffect, useMemo } from "react";
+import { useCallback, useState, useRef, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import {
   ArrowLeft,
@@ -57,11 +57,11 @@ const sidebarNodeTypes = [
   },
   {
     id: "llm",
-    label: "LLM (OpenAI)",
+    label: "LLM ",
     type: "llm",
     icon: Brain,
     initialData: {
-      model: "gpt-4o-mini",
+      model: "gemini",
       apiKey: "",
       prompt: "You are a helpful PDF assistant. Use web search if the PDF lacks context",
       temperature: 0.75,
@@ -238,6 +238,7 @@ export default function Editor() {
       {/* Header */}
       <header className="sticky top-0 z-40 flex h-14 items-center gap-4 border-b bg-background px-4 md:px-6 justify-between">
         <div className="flex gap-2">
+          
           <Button>
             <Link to="/" className="flex items-center gap-2">
               <ArrowLeft className="h-4 w-4" />
@@ -275,17 +276,23 @@ export default function Editor() {
       {/* Main */}
       <main className="flex flex-1">
         <aside className="w-64 border-r bg-muted/40 p-3 flex flex-col gap-3">
-          <h2 className="text-sm font-semibold text-muted-foreground">Components</h2>
+          <h2 className="text-sm font-semibold text-muted-foreground">
+            Components
+          </h2>
           <div className="grid gap-1.5">
             {sidebarNodeTypes.map((node) => (
               <Card
                 key={node.id}
                 draggable
-                onDragStart={(e) => onDragStart(e, node.type, node.initialData || {})}
+                onDragStart={(e) =>
+                  onDragStart(e, node.type, node.initialData || {})
+                }
                 className="cursor-grab active:cursor-grabbing px-2 py-1 gap-0"
               >
                 <CardHeader className="p-2 flex flex-row items-center justify-between space-y-0">
-                  <CardTitle className="text-xs font-medium">{node.label}</CardTitle>
+                  <CardTitle className="text-xs font-medium">
+                    {node.label}
+                  </CardTitle>
                   <node.icon className="w-4 h-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent className="p-2 pt-0 text-[0.65rem] text-muted-foreground">
@@ -297,10 +304,14 @@ export default function Editor() {
 
           <Separator className="my-2" />
 
-          <h2 className="text-sm font-semibold text-muted-foreground">Settings</h2>
+          <h2 className="text-sm font-semibold text-muted-foreground">
+            Settings
+          </h2>
           <Card className="px-2 py-1.5">
             <CardHeader className="p-2 flex flex-row items-center justify-between space-y-0">
-              <CardTitle className="text-xs font-medium">Stack Settings</CardTitle>
+              <CardTitle className="text-xs font-medium">
+                Stack Settings
+              </CardTitle>
               <Settings className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent className="p-2 pt-0 text-[0.65rem] text-muted-foreground">
@@ -333,7 +344,11 @@ export default function Editor() {
         </div>
       </main>
 
-      <ChatModal open={showChat} onClose={() => setShowChat(false)} stackId={stackId} />
+      <ChatModal
+        open={showChat}
+        onClose={() => setShowChat(false)}
+        stackId={stackId}
+      />
     </div>
   );
 }

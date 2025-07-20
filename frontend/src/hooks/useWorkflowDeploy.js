@@ -1,19 +1,31 @@
 import { useState } from "react";
+import { toast } from "sonner"; // ✅ Sonner toast
 
-// Main deploy hook
 export function useWorkflowDeploy({ nodes, edges, stackId }) {
   const [isDeploying, setIsDeploying] = useState(false);
   const [showChat, setShowChat] = useState(false);
+  const [llmOutput, setLlmOutput] = useState(""); // ✅ Needed externally
 
   const saveToLocalStorage = () => {
     try {
       const data = { nodes, edges };
       localStorage.setItem(`workflow-${stackId}`, JSON.stringify(data));
     } catch (error) {
-      // You might want to add more robust error handling here, e.g., showing a user-friendly message.
-      console.error("Error saving to local storage:", error);
+      console.error("❌ Error saving to local storage:", error);
+      toast.error("Unable to save workflow locally.");
     }
   };
+
+  const isKnownLLMError = (text) =>
+    typeof text === "string" &&
+    (text.includes("Quota exceeded") ||
+      text.includes("Invalid API key") ||
+      text.includes("billing disabled") ||
+      text.includes("Bad input") ||
+      text.includes("unsupported model") ||
+      text.includes("Model not found") ||
+      text.includes("OpenAI Error") ||
+      text.includes("Gemini Error"));
 
   const deploy = async () => {
     try {
@@ -31,13 +43,10 @@ export function useWorkflowDeploy({ nodes, edges, stackId }) {
       formData.append("nodes", JSON.stringify(cleanedNodes));
       formData.append("edges", JSON.stringify(edges));
 
-      // --- Start of added console logging for formData ---
-      console.log("--- FormData Content Before API Call ---");
+      console.log("📤 Sending FormData:");
       for (let pair of formData.entries()) {
-        console.log(pair[0] + ":", pair[1]);
+        console.log(pair[0], ":", pair[1]);
       }
-      console.log("---------------------------------------");
-      // --- End of added console logging for formData ---
 
       const response = await fetch(
         "http://localhost:8000/api/execute-workflow",
@@ -49,9 +58,23 @@ export function useWorkflowDeploy({ nodes, edges, stackId }) {
 
       const result = await response.json();
       console.log("✅ API Success Response:", result);
-      setShowChat(true);
+
+      const llmText = result?.llm_response || result?.final_output || "";
+
+      if (isKnownLLMError(llmText)) {
+        toast.error(llmText);
+        return;
+      }
+
+      if (typeof llmText === "string" && llmText.trim() !== "") {
+        setLlmOutput(llmText);
+        setShowChat(true);
+      } else {
+        toast.warning("No usable output from the LLM.");
+      }
     } catch (error) {
       console.error("❗Deployment Error:", error);
+      toast.error("Could not reach the server. Try again later.");
     } finally {
       setIsDeploying(false);
     }
@@ -68,7 +91,8 @@ export function useWorkflowDeploy({ nodes, edges, stackId }) {
     isDeploying,
     showChat,
     setShowChat,
-    saveToLocalStorage, // ✅ Expose this
+    llmOutput, // ✅ added back for external use
+    saveToLocalStorage,
   };
 }
 

@@ -198,17 +198,16 @@ export const LLMNode = ({ id, data }) => {
         <Select
           value={model}
           onValueChange={(value) => {
-            setModel(value)
-            handleDataChange("model", value)
+            setModel(value);
+            handleDataChange("model", value);
           }}
         >
           <SelectTrigger id={`llmModel-${id}`} className="h-6 text-[0.6rem]">
             <SelectValue placeholder="Select model" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="gpt-4o-mini">GPT 4o - Mini</SelectItem>
-            <SelectItem value="gpt-4o">GPT 4o</SelectItem>
-            <SelectItem value="gpt-3.5-turbo">GPT 3.5 Turbo</SelectItem>
+            <SelectItem value="gemini-1.5-flash">gemini-1.5-flash</SelectItem>
+            <SelectItem value="gpt-3.5-turbo">gpt-3.5-turbo</SelectItem>
           </SelectContent>
         </Select>
         <Label htmlFor={`llmApiKey-${id}`} className="text-[0.55rem]">
@@ -222,8 +221,8 @@ export const LLMNode = ({ id, data }) => {
             type={showApiKey ? "text" : "password"}
             value={apiKey}
             onChange={(e) => {
-              setApiKey(e.target.value)
-              handleDataChange("apiKey", e.target.value)
+              setApiKey(e.target.value);
+              handleDataChange("apiKey", e.target.value);
             }}
             placeholder="Enter your API key"
             className="h-6 text-[0.6rem] pr-6"
@@ -234,8 +233,14 @@ export const LLMNode = ({ id, data }) => {
             className="absolute right-0.5 top-1/2 -translate-y-1/2 h-4 w-4"
             onClick={() => setShowApiKey(!showApiKey)}
           >
-            {showApiKey ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
-            <span className="sr-only">{showApiKey ? "Hide API Key" : "Show API Key"}</span>
+            {showApiKey ? (
+              <EyeOff className="h-3 w-3" />
+            ) : (
+              <Eye className="h-3 w-3" />
+            )}
+            <span className="sr-only">
+              {showApiKey ? "Hide API Key" : "Show API Key"}
+            </span>
           </Button>
         </div>
         <Label htmlFor={`prompt-${id}`} className="text-[0.55rem]">
@@ -244,19 +249,20 @@ export const LLMNode = ({ id, data }) => {
           Prompt
         </Label>
         <Textarea
-  id={`prompt-${id}`}
-  value={prompt}
-  onChange={(e) => {
-    setPrompt(e.target.value);
-    handleDataChange("prompt", e.target.value);
-  }}
-  className="text-[0.6rem]"
-  rows={3}
-/>
+          id={`prompt-${id}`}
+          value={prompt}
+          onChange={(e) => {
+            setPrompt(e.target.value);
+            handleDataChange("prompt", e.target.value);
+          }}
+          className="text-[0.6rem]"
+          rows={3}
+        />
 
         <p className="text-[0.55rem] text-blue-500 mt-0.5">
           {" "}
-          {/* Further reduced text size */}• CONTEXT: {"{context}"} • User Query: {"{query}"}
+          {/* Further reduced text size */}• CONTEXT: {"{context}"} • User
+          Query: {"{query}"}
         </p>
         <Label htmlFor={`temperature-${id}`} className="text-[0.55rem]">
           {" "}
@@ -271,9 +277,9 @@ export const LLMNode = ({ id, data }) => {
           max="1"
           value={temperature}
           onChange={(e) => {
-            const val = Number.parseFloat(e.target.value)
-            setTemperature(isNaN(val) ? 0 : val)
-            handleDataChange("temperature", isNaN(val) ? 0 : val)
+            const val = Number.parseFloat(e.target.value);
+            setTemperature(isNaN(val) ? 0 : val);
+            handleDataChange("temperature", isNaN(val) ? 0 : val);
           }}
           className="h-6 text-[0.6rem]"
         />
@@ -287,8 +293,8 @@ export const LLMNode = ({ id, data }) => {
             id={`webSearchTool-${id}`}
             checked={webSearchTool}
             onCheckedChange={(checked) => {
-              setWebSearchTool(checked)
-              handleDataChange("webSearchTool", checked)
+              setWebSearchTool(checked);
+              handleDataChange("webSearchTool", checked);
             }}
             className="scale-50"
           />
@@ -306,8 +312,8 @@ export const LLMNode = ({ id, data }) => {
                 type={showSerpApiKey ? "text" : "password"}
                 value={serpApiKey}
                 onChange={(e) => {
-                  setSerpApiKey(e.target.value)
-                  handleDataChange("serpApiKey", e.target.value)
+                  setSerpApiKey(e.target.value);
+                  handleDataChange("serpApiKey", e.target.value);
                 }}
                 placeholder="Enter SERP API key"
                 className="h-6 text-[0.6rem] pr-6"
@@ -318,18 +324,39 @@ export const LLMNode = ({ id, data }) => {
                 className="absolute right-0.5 top-1/2 -translate-y-1/2 h-4 w-4"
                 onClick={() => setShowSerpApiKey(!showSerpApiKey)}
               >
-                {showSerpApiKey ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
-                <span className="sr-only">{showSerpApiKey ? "Hide SERP API Key" : "Show SERP API Key"}</span>
+                {showSerpApiKey ? (
+                  <EyeOff className="h-3 w-3" />
+                ) : (
+                  <Eye className="h-3 w-3" />
+                )}
+                <span className="sr-only">
+                  {showSerpApiKey ? "Hide SERP API Key" : "Show SERP API Key"}
+                </span>
               </Button>
             </div>
           </>
         )}
       </div>
-      <Handle type="target" position={Position.Left} id="context" className="!bg-blue-500" />
-      <Handle type="target" position={Position.Left} id="query" className="!bg-blue-500" />
-      <Handle type="source" position={Position.Right} id="output" className="!bg-blue-500" />
+      <Handle
+        type="target"
+        position={Position.Left}
+        id="context"
+        className="!bg-blue-500"
+      />
+      <Handle
+        type="target"
+        position={Position.Left}
+        id="query"
+        className="!bg-blue-500"
+      />
+      <Handle
+        type="source"
+        position={Position.Right}
+        id="output"
+        className="!bg-blue-500"
+      />
     </NodeCard>
-  )
+  );
 }
 
 // Output Node
